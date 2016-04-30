@@ -6,6 +6,8 @@ os.chdir(directory)
 
 file = "sgsgvoges002.2015-09-27_001827_732.log.txt"
 file2 = "test_log.txt"
+file3 = 'CP_FW_log1.csv'
+file4 = 'CP_FW_log1_unique.csv'
 
 print directory
 
@@ -35,7 +37,10 @@ def delete_working_files():
          os.remove ('file3-comma.txt')
     except:
 	    pass
-
+    try:
+         os.remove ('CP_FW_log1_unique.csv')
+    except:
+	    pass    
 
 def convert_semicolon_to_comma():
     a = ('\n')
@@ -60,12 +65,18 @@ def import_fwlog_in_csv():
                     myfile.writelines(l+'\n')
 
 def strip_columns():
-    file3 = 'CP_FW_log1.csv'
     with open(str(file3)) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             print(row['source'], row['destination'], row['service'])
 			
+def unique_rows():
+    with open(file3,'r') as in_file, open(file4,'w') as out_file:
+        seen = set() # set for fast O(1) amortized lookup
+        for line in in_file:
+            if line in seen: continue # skip duplicate
+            seen.add(line)
+            out_file.write(line)
 			
 
 #line_count()
@@ -75,3 +86,4 @@ convert_semicolon_to_comma()
 add_headings_to_csv()
 import_fwlog_in_csv()
 strip_columns()
+unique_rows()
