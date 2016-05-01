@@ -5,16 +5,17 @@ directory = 'C:\Python27\my_scripts'
 os.chdir(directory)
 
 file = "sgsgvoges002.2015-09-27_001827_732.log.txt"
-file2 = "test_log.txt"
+file2 = "sgsgvoges002.2015-09-27_001827_732.log.txt"
 file3 = 'CP_FW_log1.csv'
-file4 = 'CP_FW_log1_unique.csv'
+file4 = 'CP_FW_log1_row_strip.csv'
+file5 = 'CP_FW_log1_unique.csv'
 
 print directory
 
-def line_count():
+def line_count(x):
     a = 0
     #if a < 6:
-    with open(file, 'rb') as f:
+    with open(x, 'rb') as f:
         for line in f:
             a = a + 1
     print a
@@ -40,7 +41,12 @@ def delete_working_files():
     try:
          os.remove ('CP_FW_log1_unique.csv')
     except:
-	    pass    
+	    pass
+    try:
+         os.remove ('CP_FW_log1_row_strip.csv')
+    except:
+	    pass
+		
 
 def convert_semicolon_to_comma():
     a = ('\n')
@@ -67,11 +73,14 @@ def import_fwlog_in_csv():
 def strip_columns():
     with open(str(file3)) as csvfile:
         reader = csv.DictReader(csvfile)
-        for row in reader:
-            print(row['source'], row['destination'], row['service'])
+        with open(file4, "a") as myfile:
+            for row in reader:
+                a = (row['source'], row['destination'], row['service'])
+                myfile.write (str(a)+"\n")
+
 			
 def unique_rows():
-    with open(file3,'r') as in_file, open(file4,'w') as out_file:
+    with open(file4,'r') as in_file, open(file5,'w') as out_file:
         seen = set() # set for fast O(1) amortized lookup
         for line in in_file:
             if line in seen: continue # skip duplicate
@@ -87,3 +96,5 @@ add_headings_to_csv()
 import_fwlog_in_csv()
 strip_columns()
 unique_rows()
+line_count(file2)
+line_count(file5)
