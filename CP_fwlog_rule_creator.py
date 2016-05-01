@@ -121,10 +121,9 @@ def strip_columns():
 			
 def unique_rows():
     with open(file4,'r') as in_file, open(file5,'w') as out_file:
-        seen = set() # set for fast O(1) amortized lookup
+        seen = set() 
         for line in in_file:
-            if line in seen: continue # skip duplicate
-            seen.add(line)
+            if line in seen: continue 
             out_file.write(line)
 			
 
